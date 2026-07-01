@@ -13,6 +13,16 @@ Project layout:
 - iOS app: `OpsPulse/` (SwiftUI + SwiftData)
 - Backend: `backend/` (Express + WebSocket STOMP-style topics)
 
+## Screenshots
+
+| Asset List                        | Asset Detail                        |
+| --------------------------------- | ----------------------------------- |
+| ![Asset List](assets/screen1.png) | ![Asset Detail](assets/screen2.png) |
+
+### Demo video
+
+[OpsPulse Demo (MP4)](assets/opspulse-demo.mp4)
+
 ## What the app does (functional overview)
 
 ### Asset fleet view
