@@ -121,20 +121,6 @@ Backend URLs (default):
   - `/topic/telemetry.<ASSET_ID>`
   - `/topic/events.<ASSET_ID>`
 
-## Run the iOS app
-
-1. Open `OpsPulse.xcodeproj` in Xcode.
-2. Select the `OpsPulse` scheme.
-3. Run on a simulator or device.
-
-### Point the app at your backend
-
-The app’s backend endpoints are configured in:
-
-- `OpsPulse/BackendConfig.swift`
-
-Update `baseURL` and `wsURL` as needed (e.g. to `localhost` for local dev, or to an ngrok URL for device testing).
-
 ## Authentication (biometrics / passcode)
 
 The app uses `LocalAuthentication` to lock/unlock.

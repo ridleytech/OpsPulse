@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "A3648EAB-3B7E-4EB9-A816-65C219A0F65D",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:OpsPulse.xcodeproj",
+      "identifier" : "33F53EBE2FF5A68D00CD7B81",
+      "name" : "OpsPulse"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:OpsPulse.xcodeproj",
+        "identifier" : "33F53ED02FF5A69000CD7B81",
+        "name" : "OpsPulseTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:OpsPulse.xcodeproj",
+        "identifier" : "33F53EDA2FF5A69100CD7B81",
+        "name" : "OpsPulseUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
