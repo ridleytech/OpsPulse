@@ -88,6 +88,22 @@ struct TelemetryPoint: Identifiable {
     let temperature: Double
 }
 
+enum TelemetrySeries: String, CaseIterable, Identifiable {
+    case pressure = "Pressure"
+    case flow = "Flow"
+    case temperature = "Temp"
+
+    var id: String { rawValue }
+
+    var color: Color {
+        switch self {
+        case .pressure: return .blue
+        case .flow: return .green
+        case .temperature: return .orange
+        }
+    }
+}
+
 @MainActor
 final class AssetDetailViewModel: ObservableObject {
     @Published var points: [TelemetryPoint] = []
@@ -151,6 +167,7 @@ struct AssetDetailView: View {
     @Query private var events: [EventEntity]
 
     @StateObject private var viewModel = AssetDetailViewModel()
+    @State private var selectedSeries: TelemetrySeries = .pressure
 
     init(assetId: String) {
         self.assetId = assetId
@@ -207,12 +224,34 @@ struct AssetDetailView: View {
                     Text("Live Telemetry")
                         .font(.headline)
 
+                    Picker("Series", selection: $selectedSeries) {
+                        ForEach(TelemetrySeries.allCases) { series in
+                            Text(series.rawValue).tag(series)
+                        }
+                    }
+                    .pickerStyle(.segmented)
+
                     Chart(viewModel.points) { p in
-                        LineMark(
-                            x: .value("Time", p.date),
-                            y: .value("Pressure", p.pressure)
-                        )
-                        .foregroundStyle(.blue)
+                        switch selectedSeries {
+                        case .pressure:
+                            LineMark(
+                                x: .value("Time", p.date),
+                                y: .value("Pressure", p.pressure)
+                            )
+                            .foregroundStyle(selectedSeries.color)
+                        case .flow:
+                            LineMark(
+                                x: .value("Time", p.date),
+                                y: .value("Flow", p.flow)
+                            )
+                            .foregroundStyle(selectedSeries.color)
+                        case .temperature:
+                            LineMark(
+                                x: .value("Time", p.date),
+                                y: .value("Temp", p.temperature)
+                            )
+                            .foregroundStyle(selectedSeries.color)
+                        }
                     }
                     .frame(height: 200)
                 }
