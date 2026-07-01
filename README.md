@@ -146,19 +146,3 @@ The app uses `LocalAuthentication` to lock/unlock.
 
 - This project stores a demo auth token in Keychain for demonstration purposes.
 - SwiftData is used for local persistence.
-
-## Troubleshooting
-
-### App can’t reach backend
-
-- Confirm `BackendConfig.baseURL` and `BackendConfig.wsURL` are correct.
-- If testing on a physical device, `localhost` will not point to your Mac; use your LAN IP or ngrok.
-
-### “Biometry not enrolled”
-
-- Enroll Face ID/Touch ID on device or enable biometrics in Simulator.
-- Or ensure your device has a passcode set so the app can fall back to passcode authentication.
-
-### Launch Screen keeps deselecting in Xcode
-
-- Ensure the target build setting `INFOPLIST_KEY_UILaunchStoryboardName` is set to `LaunchScreen`.
