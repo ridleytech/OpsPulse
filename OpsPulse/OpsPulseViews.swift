@@ -45,38 +45,42 @@ struct AssetsView: View {
 
     var body: some View {
         NavigationStack {
-            List {
-                if let errorMessage = viewModel.errorMessage {
-                    Text(errorMessage)
-                        .foregroundStyle(.red)
-                }
-
-                ForEach(assets) { asset in
-                    NavigationLink(value: asset.id) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(asset.name)
-                                .font(.headline)
-                            Text("\(asset.type.uppercased()) • \(asset.location)")
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                }
-            }
-            .navigationTitle("OpsPulse")
-            .navigationDestination(for: String.self) { assetId in
-                AssetDetailView(assetId: assetId)
-            }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
+            VStack(spacing: 0) {
+                AppHeaderView {
                     if viewModel.isLoading {
                         ProgressView()
+                            .tint(.white)
                     } else {
-                        Button("Refresh") {
+                        Button {
                             Task { await viewModel.refresh(modelContext: modelContext) }
+                        } label: {
+                            Image(systemName: "arrow.clockwise")
+                                .foregroundStyle(Color.white)
                         }
                     }
                 }
+
+                List {
+                    if let errorMessage = viewModel.errorMessage {
+                        Text(errorMessage)
+                            .foregroundStyle(.red)
+                    }
+
+                    ForEach(assets) { asset in
+                        NavigationLink(value: asset.id) {
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(asset.name)
+                                    .font(.headline)
+                                Text("\(asset.type.uppercased()) • \(asset.location)")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                    }
+                }
+            }
+            .navigationDestination(for: String.self) { assetId in
+                AssetDetailView(assetId: assetId)
             }
             .task {
                 if assets.isEmpty {
@@ -104,9 +108,9 @@ enum TelemetrySeries: String, CaseIterable, Identifiable {
 
     var color: Color {
         switch self {
-        case .pressure: return .blue
-        case .flow: return .green
-        case .temperature: return .orange
+        case .pressure: return Color("BrandBlue")
+        case .flow: return Color("BrandGray")
+        case .temperature: return Color("BrandRed")
         }
     }
 }
@@ -334,4 +338,42 @@ struct EventRow: View {
         .background(.thinMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 12))
     }
+}
+
+private func makePreviewContainer() -> ModelContainer {
+    let schema = Schema([
+        AssetEntity.self,
+        EventEntity.self,
+    ])
+    let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: schema, configurations: [modelConfiguration])
+    let context = ModelContext(container)
+
+    let assetId = "A-100"
+    context.insert(AssetEntity(id: assetId, name: "EOG Well 100", type: "well", location: "Permian", status: "online", updatedAt: Date()))
+    context.insert(AssetEntity(id: "C-22", name: "Compressor 22", type: "compressor", location: "Eagle Ford", status: "maintenance", updatedAt: Date()))
+
+    context.insert(EventEntity(id: "E-1", assetId: assetId, timestamp: Date().addingTimeInterval(-300), severity: "high", message: "Pressure spike detected"))
+    context.insert(EventEntity(id: "E-2", assetId: assetId, timestamp: Date().addingTimeInterval(-120), severity: "low", message: "Flow rate returned to normal"))
+
+    try? context.save()
+    return container
+}
+
+#Preview {
+    AssetsView()
+        .modelContainer(makePreviewContainer())
+}
+
+#Preview {
+    NavigationStack {
+        AssetDetailView(assetId: "A-100")
+    }
+    .modelContainer(makePreviewContainer())
+}
+
+#Preview {
+    let event = EventEntity(id: "E-Preview", assetId: "A-100", timestamp: Date(), severity: "medium", message: "Valve inspection scheduled")
+    return EventRow(event: event)
+        .modelContainer(makePreviewContainer())
 }

@@ -34,7 +34,7 @@ final class AuthManager: ObservableObject {
         context.localizedCancelTitle = "Cancel"
 
         var error: NSError?
-        let canEvaluate = context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error)
+        let canEvaluate = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
 
         if !canEvaluate {
             if let error {
@@ -48,7 +48,7 @@ final class AuthManager: ObservableObject {
 
         do {
             let ok = try await context.evaluatePolicy(
-                .deviceOwnerAuthentication,
+                .deviceOwnerAuthenticationWithBiometrics,
                 localizedReason: "Authenticate to unlock OpsPulse"
             )
             isUnlocked = ok

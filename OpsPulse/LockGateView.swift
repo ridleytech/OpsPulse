@@ -17,6 +17,8 @@ struct LockGateView: View {
                     .environmentObject(authManager)
             } else {
                 VStack(spacing: 16) {
+                    AppHeaderView()
+
                     Text("OpsPulse")
                         .font(.largeTitle)
                         .fontWeight(.semibold)
@@ -40,4 +42,8 @@ struct LockGateView: View {
             }
         }
     }
+}
+
+#Preview {
+    LockGateView()
 }
