@@ -1,6 +1,6 @@
 //
-//  EOGSampleTests.swift
-//  EOGSampleTests
+//  OpsPulseTests.swift
+//  OpsPulseTests
 //
 //  Created by Randall Ridley on 7/1/26.
 //

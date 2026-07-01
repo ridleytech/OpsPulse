@@ -1,13 +1,13 @@
 //
-//  EOGSampleUITestsLaunchTests.swift
-//  EOGSampleUITests
+//  OpsPulseUITestsLaunchTests.swift
+//  OpsPulseUITests
 //
 //  Created by Randall Ridley on 7/1/26.
 //
 
 import XCTest
 
-final class EOGSampleUITestsLaunchTests: XCTestCase {
+final class OpsPulseUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

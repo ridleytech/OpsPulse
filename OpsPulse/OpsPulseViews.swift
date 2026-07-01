@@ -1,6 +1,13 @@
-import SwiftUI
-import SwiftData
+//
+//  OpsPulseApp.swift
+//  OpsPulse
+//
+//  Created by Randall Ridley on 7/1/26.
+//
+
 import Charts
+import SwiftData
+import SwiftUI
 
 @MainActor
 final class AssetsViewModel: ObservableObject {
@@ -153,8 +160,7 @@ final class AssetDetailViewModel: ObservableObject {
                     }
                 }
             }
-        } catch {
-        }
+        } catch {}
     }
 }
 

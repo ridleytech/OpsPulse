@@ -1,6 +1,6 @@
 //
-//  EOGSampleApp.swift
-//  EOGSample
+//  OpsPulseApp.swift
+//  OpsPulse
 //
 //  Created by Randall Ridley on 7/1/26.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 @main
-struct EOGSampleApp: App {
+struct OpsPulseApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             AssetEntity.self,
@@ -26,7 +26,7 @@ struct EOGSampleApp: App {
 
     var body: some Scene {
         WindowGroup {
-            AssetsView()
+            LockGateView()
         }
         .modelContainer(sharedModelContainer)
     }
