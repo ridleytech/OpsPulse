@@ -33,6 +33,7 @@ struct LockGateView: View {
                         Task { await authManager.unlockWithBiometrics() }
                     }
                     .buttonStyle(.borderedProminent)
+                    .tint(Color("BrandRed"))
 
                     Spacer(minLength: 0)
                 }
