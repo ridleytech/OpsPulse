@@ -34,21 +34,32 @@ final class AuthManager: ObservableObject {
         context.localizedCancelTitle = "Cancel"
 
         var error: NSError?
-        let canEvaluate = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
+        let canEvaluateBiometrics = context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error)
 
-        if !canEvaluate {
-            if let error {
-                lastErrorMessage = error.localizedDescription
+        let policy: LAPolicy
+        if canEvaluateBiometrics {
+            policy = .deviceOwnerAuthenticationWithBiometrics
+        } else {
+            var passcodeError: NSError?
+            let canEvaluatePasscode = context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &passcodeError)
+            if canEvaluatePasscode {
+                policy = .deviceOwnerAuthentication
             } else {
-                lastErrorMessage = "Authentication is not available on this device."
+                if let passcodeError {
+                    lastErrorMessage = passcodeError.localizedDescription
+                } else if let error {
+                    lastErrorMessage = error.localizedDescription
+                } else {
+                    lastErrorMessage = "Authentication is not available on this device."
+                }
+                isUnlocked = false
+                return
             }
-            isUnlocked = false
-            return
         }
 
         do {
             let ok = try await context.evaluatePolicy(
-                .deviceOwnerAuthenticationWithBiometrics,
+                policy,
                 localizedReason: "Authenticate to unlock OpsPulse"
             )
             isUnlocked = ok

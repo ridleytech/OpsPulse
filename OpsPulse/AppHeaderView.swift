@@ -25,6 +25,7 @@ struct AppHeaderView<Trailing: View>: View {
         .padding(.top, 8)
         .padding(.bottom, 8)
         .background(Color("BrandRed"))
+        .ignoresSafeArea(edges: .top)
     }
 }
 

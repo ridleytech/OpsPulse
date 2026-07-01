@@ -170,6 +170,7 @@ final class AssetDetailViewModel: ObservableObject {
 
 struct AssetDetailView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
 
     let assetId: String
 
@@ -188,102 +189,122 @@ struct AssetDetailView: View {
     var asset: AssetEntity? { assetMatches.first }
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 16) {
-                if let asset {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(asset.name)
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                        Text("\(asset.type.uppercased()) • \(asset.location) • \(asset.status)")
-                            .foregroundStyle(.secondary)
-                    }
-                } else {
-                    Text(assetId)
-                        .font(.title2)
-                }
+        VStack(spacing: 0) {
+            AppHeaderView()
 
-                if let t = viewModel.lastTelemetry {
-                    HStack(spacing: 12) {
-                        VStack(alignment: .leading) {
-                            Text("Pressure")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            Text(String(format: "%.2f", t.pressure))
-                                .font(.headline)
-                        }
-                        VStack(alignment: .leading) {
-                            Text("Flow")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            Text(String(format: "%.2f", t.flow))
-                                .font(.headline)
-                        }
-                        VStack(alignment: .leading) {
-                            Text("Temp")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                            Text(String(format: "%.2f", t.temperature))
-                                .font(.headline)
-                        }
-                        Spacer()
+            HStack {
+                Button {
+                    dismiss()
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "chevron.left")
+                        Text("Back")
                     }
                 }
+                .foregroundStyle(Color("BrandGray"))
 
-                VStack(alignment: .leading) {
-                    Text("Live Telemetry")
-                        .font(.headline)
-
-                    Picker("Series", selection: $selectedSeries) {
-                        ForEach(TelemetrySeries.allCases) { series in
-                            Text(series.rawValue).tag(series)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-
-                    Chart(viewModel.points) { p in
-                        switch selectedSeries {
-                        case .pressure:
-                            LineMark(
-                                x: .value("Time", p.date),
-                                y: .value("Pressure", p.pressure)
-                            )
-                            .foregroundStyle(selectedSeries.color)
-                        case .flow:
-                            LineMark(
-                                x: .value("Time", p.date),
-                                y: .value("Flow", p.flow)
-                            )
-                            .foregroundStyle(selectedSeries.color)
-                        case .temperature:
-                            LineMark(
-                                x: .value("Time", p.date),
-                                y: .value("Temp", p.temperature)
-                            )
-                            .foregroundStyle(selectedSeries.color)
-                        }
-                    }
-                    .frame(height: 200)
-                }
-
-                VStack(alignment: .leading) {
-                    Text("Events")
-                        .font(.headline)
-
-                    if events.isEmpty {
-                        Text("No events yet")
-                            .foregroundStyle(.secondary)
-                    } else {
-                        ForEach(events) { event in
-                            EventRow(event: event)
-                        }
-                    }
-                }
+                Spacer(minLength: 0)
             }
-            .padding()
+            .padding(.horizontal)
+            .padding(.top, 4)
+            .padding(.bottom, 0)
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    if let asset {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(asset.name)
+                                .font(.title2)
+                                .fontWeight(.semibold)
+                            Text("\(asset.type.uppercased()) • \(asset.location) • \(asset.status)")
+                                .foregroundStyle(.secondary)
+                        }
+                    } else {
+                        Text(assetId)
+                            .font(.title2)
+                    }
+
+                    if let t = viewModel.lastTelemetry {
+                        HStack(spacing: 12) {
+                            VStack(alignment: .leading) {
+                                Text("Pressure")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Text(String(format: "%.2f", t.pressure))
+                                    .font(.headline)
+                            }
+                            VStack(alignment: .leading) {
+                                Text("Flow")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Text(String(format: "%.2f", t.flow))
+                                    .font(.headline)
+                            }
+                            VStack(alignment: .leading) {
+                                Text("Temp")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                                Text(String(format: "%.2f", t.temperature))
+                                    .font(.headline)
+                            }
+                            Spacer()
+                        }
+                    }
+
+                    VStack(alignment: .leading) {
+                        Text("Live Telemetry")
+                            .font(.headline)
+
+                        Picker("Series", selection: $selectedSeries) {
+                            ForEach(TelemetrySeries.allCases) { series in
+                                Text(series.rawValue).tag(series)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+
+                        Chart(viewModel.points) { p in
+                            switch selectedSeries {
+                            case .pressure:
+                                LineMark(
+                                    x: .value("Time", p.date),
+                                    y: .value("Pressure", p.pressure)
+                                )
+                                .foregroundStyle(selectedSeries.color)
+                            case .flow:
+                                LineMark(
+                                    x: .value("Time", p.date),
+                                    y: .value("Flow", p.flow)
+                                )
+                                .foregroundStyle(selectedSeries.color)
+                            case .temperature:
+                                LineMark(
+                                    x: .value("Time", p.date),
+                                    y: .value("Temp", p.temperature)
+                                )
+                                .foregroundStyle(selectedSeries.color)
+                            }
+                        }
+                        .frame(height: 200)
+                    }
+
+                    VStack(alignment: .leading) {
+                        Text("Events")
+                            .font(.headline)
+
+                        if events.isEmpty {
+                            Text("No events yet")
+                                .foregroundStyle(.secondary)
+                        } else {
+                            ForEach(events) { event in
+                                EventRow(event: event)
+                            }
+                        }
+                    }
+                }
+                .padding()
+            }
         }
-        .navigationTitle(asset?.id ?? assetId)
-        .navigationBarTitleDisplayMode(.inline)
+        .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             viewModel.start(assetId: assetId, modelContext: modelContext)
         }

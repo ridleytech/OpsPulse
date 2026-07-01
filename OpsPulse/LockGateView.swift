@@ -33,8 +33,11 @@ struct LockGateView: View {
                         Task { await authManager.unlockWithBiometrics() }
                     }
                     .buttonStyle(.borderedProminent)
+
+                    Spacer(minLength: 0)
                 }
-                .padding()
+                .padding(0)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
                 .task {
                     authManager.bootstrap()
                     await authManager.unlockWithBiometrics()
