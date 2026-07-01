@@ -8,7 +8,7 @@ struct AppHeaderView<Trailing: View>: View {
     }
 
     var body: some View {
-        HStack(alignment: .center, spacing: 12) {
+        ZStack {
             Image("eog-logo")
                 .renderingMode(.template)
                 .resizable()
@@ -17,10 +17,12 @@ struct AppHeaderView<Trailing: View>: View {
                 .foregroundStyle(Color.white)
                 .accessibilityLabel("EOG Resources")
 
-            Spacer(minLength: 0)
-
-            trailing
+            HStack {
+                Spacer(minLength: 0)
+                trailing
+            }
         }
+        .frame(maxWidth: .infinity)
         .padding(.horizontal)
         .padding(.top, 8)
         .padding(.bottom, 8)
