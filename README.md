@@ -23,6 +23,8 @@ Project layout:
 
 [OpsPulse Demo (MP4)](assets/opspulse-demo.mp4)
 
+[OpsPulse Demo (YouTube)](https://youtube.com/shorts/CM99nE12xMo?feature=share)
+
 ## What the app does (functional overview)
 
 ### Asset fleet view
